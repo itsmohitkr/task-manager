@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" data-auto-replace-svg="nest"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        const IndexId = {{indexId}};
+    </script>
+</head>
+
+<body>
+    <div class="conatiner">
+
+        <section class="header">
+            <div class="heading">
+                <h1>Manage your day.</h1>
+            </div>
+        </section>
+
+        <section class="card_container">
+            <div class="row">
+                <div class="column3" id="to_do">
+                    <div class="card_heading">
+                        <h3>To do </h3>
+                        <i class="fas fa-plus" id="add_sign" onclick="addItem()"></i>
+                    </div>
+
+                    <div class="new_task">
+
+                        <!--drop down-->
+                        <div class="task_added" id="dropdown" style="order: 1;">
+                            <textarea name="" id="textarea_data" cols="38" rows="3" style="resize: none;"></textarea>
+                            <div class="line"></div>
+                            <div class="moveto">
+                                <span id="add" onclick="addtask()">Add task</span>
+                                <span id="cancel" onclick="cancel()">Cancel</span>
+                            </div>
+                        </div>
+{{!-- 
+                        <div class="task_added">
+                            <div class="icon" style="display: flex;">
+                            <i class="far fa-caret-square-down"></i>
+                            <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <p class="task_text">Lorem ipsum dolo is nut lasu kasn Lorem ipsum dolo is nut lasu kasn Lorem ipsum dolo is nut lasu kasn Lorem ipsum dolo is nut lasu kasn</p>
+                            <div class="line"></div>
+                            <div class="moveto">
+                                <span class="moveto_progress">Move to Progress</span>
+                                <span class="moveto_done">Move to Completed</span>
+                            </div>
+                        </div> --}}
+
+                        
+                    </div>
+                </div>
+                <div class="column3" id="in_progress">
+                    <div class="card_heading">
+                        <h3>In Progress </h3>
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="main_progress">
+                    </div>
+                    
+                </div>
+                <div class="column3" id="completed">
+                    <div class="card_heading">
+                        <h3>Completed</h3>
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="main_completed">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--script-->
+     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
