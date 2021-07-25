@@ -87,6 +87,11 @@
     padding: 15px;
 }
 
+.task_input_box_outer {
+    position: absolute;
+    z-index: 2;
+}
+
 .new_task,
 .main_progress,
 .main_completed {
@@ -94,6 +99,18 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    position: relative;
+    z-index: 1;
+}
+
+.task_input_box_inner{
+     margin-left: 5px;
+     margin-right: 5px;
+     background-color: #2d333b;
+     padding: 15px;
+     border: 1px solid #454646;
+     border-bottom-left-radius: 5px;
+     border-bottom-right-radius: 5px;
 }
 
 .task_added,
@@ -134,6 +151,14 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
+.moveto .add{
+    border: 1px solid green;
+}
+
+.moveto .cancel{
+    border: 1px solid red;
+}
 .moveto span:hover{
     background-color: #adb6ba;
     color: #1c2128;
@@ -141,7 +166,7 @@
     border-radius: 4px;
 }
 
-.fa-plus{
+.fa-plus , .fa-trash-alt {
     cursor: pointer;
 }
 

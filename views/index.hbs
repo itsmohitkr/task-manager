@@ -30,17 +30,20 @@
                         <i class="fas fa-plus" id="add_sign" onclick="addItem()"></i>
                     </div>
 
-                    <div class="new_task">
-
-                        <!--drop down-->
-                        <div class="task_added" id="dropdown" style="order: 1;">
+                    <div class="task_input_box_outer">
+                        <div class="task_input_box_inner" id="dropdown">
                             <textarea name="" id="textarea_data" cols="38" rows="3" style="resize: none;"></textarea>
                             <div class="line"></div>
                             <div class="moveto">
-                                <span id="add" onclick="addtask()">Add task</span>
-                                <span id="cancel" onclick="cancel()">Cancel</span>
+                                <span class="add" onclick="addtask()">Add task</span>
+                                <span class="cancel" onclick="cancel()">Cancel</span>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="new_task">
+
+                        <!--drop down-->
 {{!-- 
                         <div class="task_added">
                             <div class="icon" style="display: flex;">
@@ -61,7 +64,7 @@
                 <div class="column3" id="in_progress">
                     <div class="card_heading">
                         <h3>In Progress </h3>
-                        <i class="fas fa-plus"></i>
+                        {{!-- <i class="fas fa-plus"></i> --}}
                     </div>
                     <div class="main_progress">
                     </div>
@@ -70,7 +73,7 @@
                 <div class="column3" id="completed">
                     <div class="card_heading">
                         <h3>Completed</h3>
-                        <i class="fas fa-plus"></i>
+                        <!-- <i class="fas fa-plus"></i> -->
                     </div>
                     <div class="main_completed">
                     </div>
