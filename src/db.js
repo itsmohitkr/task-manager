@@ -1,7 +1,8 @@
 function dbConnect() {
     // Db connection
     const mongoose = require('mongoose')
-    const url = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@task-manager.nsuiu.mongodb.net/task-manager?retryWrites=true&w=majority`
+    // const url = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@task-manager.nsuiu.mongodb.net/task-manager?retryWrites=true&w=majority`
+    // const url = `mongodb+srv://mohit_3006:YFFpENEb9Vtz1JFp@task-manager.nsuiu.mongodb.net/task-manager?retryWrites=true&w=majority`
 
     mongoose.connect(url, {
         useNewUrlParser: true,
