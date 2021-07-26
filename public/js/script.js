@@ -18,9 +18,8 @@ function addItem() {
 }
 
 function cancel() {
-    text_data.value = "";
     dropdown.style.display = "none";
-
+    
 }
 
 function addtask() {
