@@ -23,11 +23,12 @@ function cancel() {
 
 function addtask() {
     console.log(text_data.value);
-    if (text_data.value == "") {
-        alert("please enter task field.")
+    // append to dom
+    text_data.value = text_data.value.trim();
+    if (text_data.value.length == 0) {
+        alert("please enter input field.")
         return;
     }
-    // append to dom
     appendtodom(text_data.value);
     
     let data = {
