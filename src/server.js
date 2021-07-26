@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const hbs = require('hbs');
 const port = process.env.PORT || 3000;
@@ -47,21 +48,20 @@ app.post('/api/tasks', (req, res) => {
         res.send(response)
     })
 })
+app.delete('/api/tasks', (req, res) => {    
+    const query = {
+        "newtask": req.body.delete_task
+    }
+    Task_list.findOneAndDelete(query)
+    .then(result => console.log(`Deleted.`))
+    .catch(err => console.error(`Delete failed with error: ${err}`))
+})
+
 app.get('/api/tasks', (req, res) => {
     Task_list.find().then(function (task) {
         res.send(task)
     })
 })
-app.delete('/api/tasks', (req, res) => {    
-    const query = {
-        "newtask": req.body.delete_task
-    };
-    console.log(query);
-    Task_list.findOneAndDelete(query)
-        .then(result => console.log(`Deleted.`))
-        .catch(err => console.error(`Delete failed with error: ${err}`))
-})
-
 
 app.post('/api/progress', (req, res) => {
     const add_to_Progress_list = new Progress_list({
@@ -115,6 +115,6 @@ app.delete('/api/completed', (req, res) => {
         .catch(err => console.error(`Delete failed with error: ${err}`))
 
 })
-app.listen(3000, () => {
-    console.log("server has started at http://localhost:3000");
+app.listen(port, () => {
+    console.log(`server has started at http://localhost:${port}`);
 })

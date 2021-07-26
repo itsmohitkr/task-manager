@@ -1,10 +1,10 @@
 function dbConnect() {
     // Db connection
     const mongoose = require('mongoose')
-    const url = 'mongodb://localhost/task_manager'
+    const url = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@task-manager.nsuiu.mongodb.net/task-manager?retryWrites=true&w=majority`
 
     mongoose.connect(url, {
-        userNewUrlParser: true,
+        useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: true
     })

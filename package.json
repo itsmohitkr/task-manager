@@ -2,14 +2,15 @@
   "name": "task_manager_app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "nodemon server.js",
-    "start": "node server.js"
+    "dev": "nodemon /src/server.js",
+    "start": "node /src/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "hbs": "^4.1.2",
     "mongoose": "^5.13.3",

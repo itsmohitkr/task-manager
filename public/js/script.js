@@ -1,4 +1,4 @@
-let username;
+// let username;
 
 // do {
 //     username=prompt("Enter your name")
@@ -52,7 +52,7 @@ function appendtodom(data) {
     let markup = `
                     <div class="icon">
                         <div>
-                            <i class="far fa-caret-square-down"></i>
+                            <i class = "far fa-list-alt"></i>
                         </div>
                         <div ${deletebtn}>
                             <i class="fas fa-trash-alt"></i>
@@ -85,7 +85,7 @@ function directTodone(evnt) {
 function deletecard(evnt) {
     alert("oops🥴! you are deleting before completing this task.")
     let task_text = evnt.parentNode.parentNode.children[1].innerText;
-    console.log(task_text)
+    // console.log(task_text)
     evnt.parentNode.parentNode.remove();
     deletenewtaskfromDb(task_text);
 }
@@ -108,7 +108,7 @@ function appendtoinprogressdom(data) {
     let markup = `
                     <div class="icon">
                         <div>
-                            <i class="far fa-caret-square-down"></i>
+                            <i class = "fas fa-spinner"></i>
                         </div>
                         <div ${delete_card_progress}>
                             <i class="fas fa-trash-alt"></i>
@@ -139,7 +139,7 @@ function progress(evnt) {
         let progressmarkup = `
                     <div class="icon">
                         <div>
-                            <i class="far fa-caret-square-down"></i>
+                            <i class = "fas fa-spinner"></i>
                         </div>
                         <div ${delete_card_progress}>
                             <i class="fas fa-trash-alt"></i>
@@ -186,11 +186,11 @@ function synctoprogressdiv(text_in_progress) {
 }
 
 function deletenewtaskfromDb(delete_task) {
-    console.log(delete_task)
+    // console.log(delete_task)
     let tobedeleted = {
         delete_task: delete_task
     }
-    console.log(tobedeleted)
+    // console.log(tobedeleted)
     const headers = {
         'Content-Type': 'application/json'
     }
@@ -217,7 +217,7 @@ function done(evnt) {
     let completedmarkup = `
                     <div class="icon">
                         <div>
-                            <i class="far fa-caret-square-down"></i>
+                            <i class = "fas fa-check-circle"></i>
                         </div>
                         <div ${delete_card_done}>
                             <i class="fas fa-trash-alt"></i>
@@ -255,7 +255,7 @@ function appendtoCompleteddom(data) {
     let completedmarkup = `
                     <div class="icon">
                         <div>
-                            <i class="far fa-caret-square-down"></i>
+                            <i class = "fas fa-check-circle"></i>
                         </div>
                         <div ${delete_card_done}>
                             <i class="fas fa-trash-alt"></i>
