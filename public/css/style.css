@@ -52,9 +52,12 @@
     background-color: #2d333b;
     height: 180px;
 }
-.heading h1{
+.heading h2{
     color: #adb6ba;
-    font-size: 35px;
+}
+.heading h2 span{
+    text-transform: lowercase;
+    color:whitesmoke;
 }
 
 .card_container{
@@ -180,6 +183,9 @@
     .column3{
         width:95%;
         margin-top: 40px;
+    }
+    .task_input_box_inner{
+        margin-left: 2px;
     }
 }
 
