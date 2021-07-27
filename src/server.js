@@ -1,120 +1,263 @@
 require('dotenv').config();
 const express = require('express');
+const app = express();
+const path = require('path');
 const hbs = require('hbs');
-const port = process.env.PORT || 3000;
+const cookieParser = require("cookie-parser");
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const flash = require('connect-flash');
+const session = require('express-session');
+const validator = require('validator');
+
+
+// Load User model
+const {
+    ensureAuthenticated,
+    forwardAuthenticated
+} = require('../config/auth');
 const {
     v4: uuidv4
 } = require('uuid')
 
-const app = express();
+const port = process.env.PORT || 4000;
+
 
 // database connection
 const dbConnect = require('./db')
 dbConnect()
 
-// require cooment module
-const Task_list = require('../models/task')
-const Progress_list = require('../models/progress')
-const Completed_list = require('../models/completed')
+require('../config/passport')(passport);
 
-app.use(express.static("public"));
+// require  module
+const User = require('../models/registers');
+
+
+const static_path = path.join(__dirname, "../public");
+const template_path = path.join(__dirname, "../template/views");
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({
     extended: false
 }));
 
-
-
+app.use(express.static(static_path));
 app.set("view engine", "hbs");
+app.set("views", template_path);
 
-app.get('/', (req, res) => {
-    res.redirect(`/${uuidv4()}`);
-})
 
-app.get('/:index', (req, res) => {
+// Express session
+app.use(
+    session({
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true
+    })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Connect flash
+app.use(flash());
+
+// Global variables
+app.use(function (req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.reg_msg = req.flash('reg_msg');
+    res.locals.drop_msg = req.flash('drop_msg');
+    res.locals.mail_msg = req.flash('mail_msg');
+    next();
+});
+
+
+
+app.get('/', ensureAuthenticated,(req, res) => {
     res.render('index', {
-        indexId: req.params.index
-    }) // pass the room id to roo.ejs
+        user: req.user,
+    }) 
 })
 
-// Routes 
+// Login Page
+
+
+app.get("/login", forwardAuthenticated, (req, res) => {
+    res.render("login", {
+        user: req.user,
+    })
+})
+
+// Register Page
+
+app.get("/register", forwardAuthenticated,(req, res) => {
+    res.render("register")
+})
+
+// Register
+app.post("/register", (req, res) => {
+    const {
+        firstname,
+        lastname,
+        email,
+        password,
+        confirmpassword
+    } = req.body;
+    let errors = [];
+
+    if (!firstname || !email || !password || !confirmpassword) {
+        errors.push({
+            msg: 'Please enter all fields.'
+        });
+    }
+
+    if (password != confirmpassword) {
+        errors.push({
+            msg: 'Passwords do not match.'
+        });
+    }
+
+    if (password.length < 3) {
+        errors.push({
+            msg: 'Password must be at least 4 characters.'
+        });
+    }
+
+    if (errors.length > 0) {
+        res.render('register', {
+            errors,
+            firstname,
+            lastname,
+            email,
+            password,
+            confirmpassword
+        });
+    } else { // no errors
+        User.findOne({
+            email: email
+        })
+            .then(user => {
+                if (user) {
+                    errors.push({
+                        msg: 'Email already exists.'
+                    });
+                    res.render('register', {
+                        errors,
+                        firstname,
+                        lastname,
+                        email,
+                        password,
+                        confirmpassword
+                    });
+                } else {
+                    UniversalTaskId = `${firstname}${uuidv4()}${lastname}`
+                    const newUser = new User({
+                        firstname,
+                        lastname,
+                        email,
+                        UniversalTaskId,
+                        toDoSection: [],
+                        InProgressSection: [],
+                        InCompletedSection: [],
+                        password
+                    });
+
+                    bcrypt.genSalt(10, (err, salt) => {
+                        bcrypt.hash(newUser.password, salt, (err, hash) => {
+                            if (err) throw err;
+                            newUser.password = hash;
+                            newUser.save()
+                                .then(user => {
+                                    req.flash(
+                                        'success_msg',
+                                        'Registration completed successfully.'
+                                    );
+                                    res.redirect('/login');
+                                })
+                                .catch(err => console.log(err));
+                        });
+                    });
+                }
+            });
+    }
+});
+
+app.post('/login', (req, res, next) => {
+
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true
+    })(req, res, next);
+});
+
+
+// to do section 
 app.post('/api/tasks', (req, res) => {
-    const addTask = new Task_list({
-        newtask: req.body.task
-        // username: req.body.username
-    })
-    addTask.save().then(response => {
-        res.send(response)
-    })
+    User.findOneAndUpdate({ email: `${req.user.email}` }, { $push: { toDoSection: { "toDoTaskText": `${req.body.task}` } } })
+        .then(result => console.log("updated"))
+    .catch(err=>console.log(err))
 })
 app.delete('/api/tasks', (req, res) => {    
-    const query = {
-        "newtask": req.body.delete_task
-    }
-    Task_list.findOneAndDelete(query)
+
+    User.findOneAndUpdate({email: `${req.user.email}`},{$pull:{toDoSection:{"toDoTaskText":`${req.body.delete_task}`}}})
     .then(result => console.log(`Deleted.`))
     .catch(err => console.error(`Delete failed with error: ${err}`))
 })
 
 app.get('/api/tasks', (req, res) => {
-    Task_list.find().then(function (task) {
+    User.findOne({ email: `${req.user.email}` }, { toDoSection: 1 })
+        .then(function (task) {
         res.send(task)
     })
 })
 
+
+// progress section
 app.post('/api/progress', (req, res) => {
-    const add_to_Progress_list = new Progress_list({
-           new_progress_task: req.body.task_text
-       })
-    add_to_Progress_list.save().then(response => {
-        res.send(response)
-    })
+      User.findOneAndUpdate({ email: `${req.user.email}` }, { $push: { InProgressSection: { "ProgressTaskText": `${req.body.task_text}`} } })
+        .then(result => console.log("updated in progress"))
+    .catch(err=>console.log(err))
 })
 
 app.get('/api/progress', (req, res) => {
-    Progress_list.find().then(function (progress_task) {
-        res.send(progress_task)
+   User.findOne({ email: `${req.user.email}` }, { InProgressSection: 1 })
+        .then(function (task) {
+        res.send(task)
     })
 })
 
 app.delete('/api/progress', (req, res) => {
-    const query = {
-        "new_progress_task": req.body.delete_task_from_progress
-    };
-    console.log(query);
-    Progress_list.findOneAndDelete(query)
-        .then(result => console.log(`Deleted.`))
-        .catch(err => console.error(`Delete failed with error: ${err}`))
-
+    
+    User.findOneAndUpdate({email: `${req.user.email}`},{$pull:{InProgressSection:{"ProgressTaskText":`${req.body.delete_task_from_progress}`}}})
+    .then(result => console.log(`Deleted from progress`))
+    .catch(err => console.error(`Delete failed with error: ${err}`))
 })
 
+// completed section
 
 app.post('/api/completed', (req, res) => {
-       const add_to_completed_list = new Completed_list({
-           new_completed_task: req.body.task_text
-       })
-    add_to_completed_list.save().then(response => {
-        res.send(response)
-    })
+     User.findOneAndUpdate({ email: `${req.user.email}` }, { $push: { InCompletedSection: { "CompletedTaskText": `${req.body.task_text}`} } })
+        .then(result => console.log("updated in completed"))
+    .catch(err=>console.log(err))
 })
 
 app.get('/api/completed', (req, res) => {
-    Completed_list.find().then(function (completed_task) {
-        res.send(completed_task)
+     User.findOne({ email: `${req.user.email}` }, { InCompletedSection: 1 })
+        .then(function (task) {
+        res.send(task)
     })
 })
 
 app.delete('/api/completed', (req, res) => {
-    const query = {
-        "new_completed_task": req.body.delete_task_from_completed
-    };
-    console.log(query);
-    Completed_list.findOneAndDelete(query)
-        .then(result => console.log(`Deleted.`))
-        .catch(err => console.error(`Delete failed with error: ${err}`))
-
+     User.findOneAndUpdate({email: `${req.user.email}`},{$pull:{InCompletedSection:{"CompletedTaskText":`${req.body.delete_task_from_completed}`}}})
+    .then(result => console.log(`Deleted from completed`))
+    .catch(err => console.error(`Delete failed with error: ${err}`))
 })
+
 app.listen(port, () => {
     console.log(`server has started at http://localhost:${port}`);
 })

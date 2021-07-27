@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/js/all.js"></script>
+
+    <link rel="stylesheet" href="/css/register.css">
+    <title>Register</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <form action="/register" method="POST">
+                <div class="form_container">
+                    <div class="heading">
+                        <p>Register</p>
+                    </div>
+                    <div>
+                    {{#each errors as |error|}}
+                        <p style="color: rgb(247, 56, 56);"><i class="fas fa-exclamation-circle"></i> {{error.msg}}</p>
+                    {{/each}}
+                        
+                    </div>
+                    <div>
+                        <input type="text" placeholder="First name" value="" name="firstname">
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Last name" value="" name="lastname">
+                    </div>
+                    <div>
+                        <input type="email" placeholder="Email" value="" name="email">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="Password" value="" name="password">
+                    </div>
+                    <div>
+                        <input type="password" placeholder="Confirm Password" value="" name="confirmpassword">
+                    </div>
+                    <div class="submit_button">
+                        <input type="submit" name="submit" value="Sign up">
+                        <a href="/login">Already an account? Log In.</a>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

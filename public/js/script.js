@@ -346,10 +346,13 @@ function fetchComments() {
     fetch('/api/tasks')
         .then(res => res.json())
         .then(result => {
-            result.forEach((comingdata) => {
-                console.log(comingdata.newtask);
-                appendtodom(comingdata.newtask)
-            })
+            // result.forEach((comingdata) => {
+            //     console.log(comingdata);
+            //     appendtodom(comingdata.newtask)
+            // })
+            for (let i = 0; i < result.toDoSection.length; i++){
+                appendtodom(result.toDoSection[i].toDoTaskText);
+            }
         })
 }
 
@@ -357,10 +360,9 @@ function fetchprogresstask() {
     fetch('/api/progress')
         .then(res => res.json())
         .then(result => {
-            result.forEach((comingdata) => {
-                console.log(comingdata);
-                appendtoinprogressdom(comingdata.new_progress_task)
-            })
+                 for (let i = 0; i < result.InProgressSection.length; i++) {
+                     appendtoinprogressdom(result.InProgressSection[i].ProgressTaskText);
+                 }
         })
 }
 
@@ -368,10 +370,9 @@ function fetchcompletedstask() {
     fetch('/api/completed')
         .then(res => res.json())
         .then(result => {
-            result.forEach((comingdata) => {
-                console.log(comingdata);
-                appendtoCompleteddom(comingdata.new_completed_task)
-            })
+                 for (let i = 0; i < result.InCompletedSection.length; i++) {
+                     appendtoCompleteddom(result.InCompletedSection[i].CompletedTaskText);
+                 }
         })
 }
 

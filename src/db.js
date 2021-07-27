@@ -3,10 +3,11 @@ function dbConnect() {
     const mongoose = require('mongoose')
    
 
-    mongoose.connect(process.env.url, {
+    mongoose.connect(process.env.url||"mongodb://localhost:27017/task_manager", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useFindAndModify: true
+        useFindAndModify: true,
+        useFindAndModify:false
     })
 
     const connection = mongoose.connection
